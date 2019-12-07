@@ -1,3 +1,4 @@
 {
-    "python.pythonPath": "/home/leandro/.virtualenvs/Hospital/bin/python"
+    "python.pythonPath": "/home/ubuntu18/.virtualenvs/fonasa/bin/python",
+    "python.formatting.provider": "black"
 }

@@ -1,0 +1,63 @@
+{% load static %}
+
+<nav class="navbar-default navbar-static-side navbar-custom" role="navigation" style="position:fixed;top:50px;left:0">
+    <div class="sidebar-collapse">
+        <ul class="nav metismenu" id="side-menu">
+            <li class="nav-header">
+                <div class="text-center profile-element">
+                    <img alt="logo" style="max-width:150px;" src="{% static 'img/logo-django.png' %}" />
+                </div>
+                <div class="text-white text-center profile-element">
+                    <strong>Base</strong>
+                </div>
+                <div class="logo-element">
+                    <strong>base+</strong>
+                </div>
+            </li>
+
+            <!-- Administrador -->
+            <li>
+                <a href="#">
+                    <i class="fa fa-home"></i>
+                    <span class="nav-label">Inicio</span>
+                </a>
+
+            </li>
+            <li>
+                <a href="#">
+                    <i class="fa fa-file-text-o"></i>
+                    <span class="nav-label">Nestable Menu</span>
+                    <span class="fa arrow"></span>
+                </a>
+                <ul class="nav nav-second-level collapse">
+                    <li>
+                        <a href="#">
+                            <i class="fa fa-pencil"></i> Nestable menu 1</a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <i class="fa fa-pencil"></i> Nestable menu 2</a>
+                    </li>
+                   
+                </ul>
+            </li>
+            <li>
+                <a href="#">
+                    <i class="fa fa-envelope"></i>
+                    <span class="nav-label">Menu 2</span>
+                </a>
+            </li>
+            <li>
+                <a href="#">
+                    <i class="fa fa-cogs"></i>
+                    <span class="nav-label">Menu 3</span>
+                </a>
+            </li>
+
+            <!-- / Administrador / -->
+
+
+        </ul>
+
+    </div>
+</nav>
