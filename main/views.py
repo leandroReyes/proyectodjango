@@ -1,24 +1,29 @@
 from django.shortcuts import render
-from main.models import PAnciano, PNinno, PJoven
+from main.models import PAnciano, PNinno, PJoven, Paciente
 from django.http import JsonResponse
 import random
 import string
 
-def randomString(stringLength=10):
-    """Generate a random string of fixed length """
+def randomNombre(largo=10):
+    """Genera un nombre de paciente aleatorio"""
     letters = string.ascii_lowercase
-    return ''.join(random.choice(letters) for i in range(stringLength))
+    return ''.join(random.choice(letters) for i in range(largo))
 
 def index(request):
     template_name = "index.html"
     context = {}
     return render(request, template_name, context)
 
-def get_list(request):
-    p = PAnciano.objects.get(noHistoriaClinica = 2)
-    l = p.Listar_Pacientes_Mayor_Riesgo()
+def listar_riesgo(request):
+    template_name = "listar_riesgo.html"
+    context = {}
+    return render(request, template_name, context)
 
-    return JsonResponse({'respuesta': l})
+def get_list(request):
+    p = Paciente.objects.get(noHistoriaClinica = int(request.GET['n']))
+    l,m = p.Listar_Pacientes_Mayor_Riesgo()
+
+    return JsonResponse({'riesgos_altos': l, 'datos_paciente':m})
 
 def load_data(request):
     from django.contrib.auth.models import User as auth_user
@@ -33,7 +38,7 @@ def load_data(request):
         e = random.randint(1, 78)
         p = random.randint(30, 100)
         es = round(random.uniform(1, 2), 2)
-        n = randomString()
+        n = randomNombre()
         if e >= 1 and e <= 15:
             PNinno.objects.create(nombre=n, edad=e, peso=p, estatura=es)
         elif e >= 16 and e <= 40:
@@ -41,7 +46,7 @@ def load_data(request):
             f = 0
             if is_fumador:
                 f = random.randint(1,20)
-            PJoven.objects.create(nombre=n, edad=e, fumador=bool(random.getrandbits(1)), noAñosFumando=f)
+            PJoven.objects.create(nombre=n, edad=e, fumador=is_fumador, noAñosFumando=f)
         else:
             PAnciano.objects.create(nombre=n, edad=e, tieneDieta=bool(random.getrandbits(1)))            
 

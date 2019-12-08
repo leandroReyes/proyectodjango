@@ -1,4 +1,10 @@
-{% extends "_Partials/_base.html" %} {% load static %} {% block stylesheet %}
+{% extends "_Partials/_base.html" %} 
+{% load static %}
+{% block title %}
+ Inicio 
+{% endblock title %}
+{% block stylesheet %}
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.20/css/jquery.dataTables.css">  
 
 <link href="{% static 'css/plugins/sweetalert/sweetalert.css' %}" rel="stylesheet"> {% endblock stylesheet %} {% block content %}
 
@@ -11,13 +17,12 @@
     </div>
 </div>
 
-<div class="row wrapper border-bottom white-bg page-heading">
-    <div class="col-sm-4">
-        <h2>
-            <i class="fa fa-home"></i> Inicio</h2>
-        <ol class="breadcrumb">
-        </ol>
-    </div>
+<div class="row wrapper white-bg" style="margin-top:1%">
+    <h1>Bienvenido</h1>
+    <h2>Seleccione una opción del menú lateral</h2>
 </div>
 
 {% endblock content %}
+{% block javascript %}
+
+{% endblock javascript %}

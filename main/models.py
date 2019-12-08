@@ -2,7 +2,6 @@ from django.db import models
 
 def get_prioridad(objeto):
         prioridad = 0
-        print(objeto)
         if objeto.edad <= 5:
             prioridad = objeto.peso - objeto.estatura + 3
         elif objeto.edad > 5 and objeto.edad <= 12:
@@ -26,7 +25,7 @@ def get_riesgo(edad, prioridad):
         riesgo = (edad * prioridad) / 100
     else:
         riesgo = ((edad * prioridad) / 100) + 5.3
-    return riesgo
+    return round(riesgo,2)
 
 class Paciente(models.Model):
     nombre = models.CharField(max_length=250)
@@ -37,16 +36,25 @@ class Paciente(models.Model):
         return self.nombre
 
     def Listar_Pacientes_Mayor_Riesgo(self):
-        riesgo_usuario = get_riesgo(self.edad, get_prioridad(self))
+        riesgo_usuario = 0
         lista_riesgo = []
         if self.edad < 16:
-            lista_riesgo = lista_riesgo + [get_riesgo(x.edad, get_prioridad(x)) for x in PNinno.objects.all().exclude(noHistoriaClinica=self.noHistoriaClinica)]
+            riesgo_usuario = get_riesgo(self.edad, get_prioridad(PNinno.objects.get(noHistoriaClinica=self.noHistoriaClinica)))
         elif self.edad > 15 and self.edad < 41:
-            lista_riesgo = lista_riesgo + [get_riesgo(x.edad, get_prioridad(x)) for x in PJoven.objects.all().exclude(noHistoriaClinica=self.noHistoriaClinica)]
+            riesgo_usuario = get_riesgo(self.edad, get_prioridad(PJoven.objects.get(noHistoriaClinica=self.noHistoriaClinica)))
         else:
-            lista_riesgo = lista_riesgo + [get_riesgo(x.edad, get_prioridad(x)) for x in PAnciano.objects.all().exclude(noHistoriaClinica=self.noHistoriaClinica)]
+            riesgo_usuario = get_riesgo(self.edad, get_prioridad(PAnciano.objects.get(noHistoriaClinica=self.noHistoriaClinica)))
+
+        lista_riesgo = lista_riesgo + [[x.noHistoriaClinica, x.nombre, x.edad, get_riesgo(x.edad, get_prioridad(x))] for x in PNinno.objects.all().exclude(noHistoriaClinica=self.noHistoriaClinica)]
+        lista_riesgo = lista_riesgo + [[x.noHistoriaClinica, x.nombre, x.edad, get_riesgo(x.edad, get_prioridad(x))] for x in PJoven.objects.all().exclude(noHistoriaClinica=self.noHistoriaClinica)]
+        lista_riesgo = lista_riesgo + [[x.noHistoriaClinica, x.nombre, x.edad, get_riesgo(x.edad, get_prioridad(x))] for x in PAnciano.objects.all().exclude(noHistoriaClinica=self.noHistoriaClinica)]
+        mis_mayores = []
+        for i in lista_riesgo:
+            if i[3] > riesgo_usuario:
+                mis_mayores.append(i)
         
-        return lista_riesgo
+
+        return mis_mayores, {'num':self.noHistoriaClinica, 'nombre':self.nombre, 'edad':self.edad, 'riesgo':riesgo_usuario}
 
 class PAnciano(Paciente):
     tieneDieta = models.BooleanField(default=False)

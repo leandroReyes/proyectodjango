@@ -1,0 +1,89 @@
+{% extends "_Partials/_base.html" %} 
+{% load static %}
+{% block title %}
+ Listar Riesgo 
+{% endblock title %}
+{% block stylesheet %}
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.20/css/jquery.dataTables.css">  
+
+<link href="{% static 'css/plugins/sweetalert/sweetalert.css' %}" rel="stylesheet"> {% endblock stylesheet %} {% block content %}
+
+<div class="row wrapper border-bottom white-bg page-heading">
+    <div class="col-sm-12">
+        <h2>
+            <i class="fa fa-list"></i> Listado Pacientes con mayor Riesgo</h2>
+        <ol class="breadcrumb">
+        </ol>
+    </div>
+</div>
+
+<div class="row wrapper white-bg" style="margin-top:1%">
+    <div class="col-lg-12" style="margin-top:1%">
+        <div class="form-group">
+            <label class="col-sm-4 control-label">Ingrese número de Historia clínica:</label>
+            <div class="col-sm-12">
+                <div class="input-group m-b">
+                    <input id="codigo" type="number" class="form-control">
+                    <span class="input-group-btn">
+                        <span id="buscar" class="btn btn-primary"><i class="fa fa-search"></i> Buscar</span>
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="contenido" style="display: none;" class="col-lg-12">
+        <div class="col-lg-12">
+            <h3>
+                Datos paciente:
+            </h3>
+            <br>
+            <ul>
+                <li><strong>Número Historia Clínica: </strong><span id="num_paciente"></span></li>
+                <li><strong>Nombre Paciente: </strong><span id="nombre_paciente"></span></li>
+                <li><strong>Edad Paciente: </strong><span id="edad_paciente"></span></li>
+                <li><strong>Riesgo Paciente: </strong><span id="riesgo_paciente"></span></li>
+            </ul>
+        </div>
+        <table id="datos" >
+            <thead>
+                <th>N° Historia Clínica</th>
+                <th>Nombre</th>
+                <th>Edad</th>
+                <th>Riesgo</th>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
+</div>
+
+{% endblock content %}
+{% block javascript %}
+<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.js"></script>
+<script>
+    $('#datos').DataTable();
+
+    function loadTable(data_t){
+        $('#contenido').show();
+        $('#datos').DataTable().clear().destroy();
+        $('#datos').DataTable( {
+            paging: true,
+            data:data_t,
+        } );
+    }
+    $('#buscar').click(function(){
+        $('#contenido').hide(); 
+        $.ajax({
+            url: "{% url 'listarriesgo' %}?n="+$('#codigo').val(),
+            success:function(result){
+                $('#num_paciente').html(result.datos_paciente.num);
+                $('#nombre_paciente').html(result.datos_paciente.nombre);
+                $('#edad_paciente').html(result.datos_paciente.edad);
+                $('#riesgo_paciente').html(result.datos_paciente.riesgo);
+                loadTable(result.riesgos_altos);
+            }
+        });
+    });
+    
+</script>
+
+{% endblock javascript %}
